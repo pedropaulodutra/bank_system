@@ -74,7 +74,7 @@ def test_deposit_ten_cents_then_twenty_cents_does_not_break_balance():
     assert account.balance == Decimal("0.30")
 
 
-def test_fail_withdraws_dont_subtract_value_from_account():
+def test_fail_withdraws_does_not_subtract_value_from_account():
     account = Account("Ana")
 
     account.deposit(Decimal("20.00"))
@@ -85,7 +85,7 @@ def test_fail_withdraws_dont_subtract_value_from_account():
     assert account.balance == Decimal("20.00")
 
 
-def test_cannot_deposit_values_with_more_then_two_decimal_places():
+def test_cannot_deposit_values_with_more_than_two_decimal_places():
     account = Account("Ana")
 
     with pytest.raises(
