@@ -44,3 +44,27 @@ def test_fail_withdraws_does_not_subtract_value_from_account():
         account.withdraw(Money(Decimal("30.00")))
 
     assert account.balance == Money(Decimal("20.00"))
+
+
+def test_withdraw_subtract_from_account():
+    account = Account("Ana")
+
+    account.deposit(Money(Decimal("10.00")))
+    account.withdraw(Money(Decimal("7.50")))
+
+    assert account.balance == Money(Decimal("2.50"))
+
+
+def test_cannot_withdraw_zero():
+    account = Account("Ana")
+
+    with pytest.raises(ValueError, match="Withdraw amount must be positive"):
+        account.withdraw(Money(Decimal("0.00")))
+
+
+def test_deposit_one_cent_to_account():
+    account = Account("Ana")
+
+    account.deposit(Money(Decimal("0.01")))
+
+    assert account.balance == Money(Decimal("0.01"))

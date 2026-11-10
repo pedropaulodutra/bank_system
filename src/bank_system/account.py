@@ -1,4 +1,5 @@
 from decimal import Decimal
+from sqlite3 import IntegrityError
 
 from bank_system.money import Money
 
@@ -24,3 +25,12 @@ class Account:
             raise ValueError("Insufficient funds")
 
         self._balance -= amount
+
+    def transfer_to(self, account: Account, amount: Money) -> None:
+        if account is self:
+            raise IntegrityError("Cannot transfer money to yourself")
+
+        
+        self.withdraw(amount)
+        account.deposit(amount)
+        
