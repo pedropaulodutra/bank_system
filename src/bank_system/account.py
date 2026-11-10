@@ -1,27 +1,26 @@
 from decimal import Decimal
 
+from bank_system.money import Money
+
 
 class Account:
     def __init__(self, owner: str) -> None:
         self.owner = owner
-        self._balance = Decimal("0.00")
+        self._balance = Money(Decimal("0.00"))
 
     @property
-    def balance(self) -> Decimal:
+    def balance(self) -> Money:
         return self._balance
 
-    def deposit(self, amount: Decimal) -> None:
-        if amount <= Decimal("0.00"):
+    def deposit(self, amount: Money) -> None:
+        if amount < Money(Decimal("0.01")):
             raise ValueError("Deposit amount must be positive")
-        if amount.quantize(Decimal("0.01")) != amount:
-            raise ValueError("Deposit amount must have at most two decimal places")
-
         self._balance += amount
 
-    def withdraw(self, amount: Decimal) -> None:
-        if amount < Decimal("0.01"):
-            raise ValueError("Withdraw amount isn't valid")
+    def withdraw(self, amount: Money) -> None:
+        if amount <= Money(Decimal("0.00")):
+            raise ValueError("Withdraw amount must be positive")
         if amount > self.balance:
             raise ValueError("Insufficient funds")
 
-        self._balance -= amount.quantize(Decimal("0.00"))
+        self._balance -= amount
