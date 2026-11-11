@@ -1,4 +1,5 @@
 from decimal import Decimal
+from uuid import UUID, uuid4
 
 from bank_system.exceptions import (
     InsufficientFundsError,
@@ -9,9 +10,17 @@ from bank_system.money import Money
 
 
 class Account:
-    def __init__(self, owner: str) -> None:
+    def __init__(self, owner: str, id: UUID | None = None) -> None:
         self.owner = owner
         self._balance = Money(Decimal("0.00"))
+        if id is not None:
+            self._id = id
+        else:
+            self._id = uuid4()
+
+    @property
+    def id(self) -> UUID:
+        return self._id
 
     @property
     def balance(self) -> Money:
@@ -36,3 +45,8 @@ class Account:
 
         self.withdraw(amount)
         destination.deposit(amount)
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Account):
+            return NotImplemented
+        return self.id == other.id

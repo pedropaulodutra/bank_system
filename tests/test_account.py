@@ -1,4 +1,5 @@
 from decimal import Decimal
+from uuid import uuid4
 
 import pytest
 
@@ -116,3 +117,25 @@ def test_insufficient_funds_error_is_also_captured_by_domain_error():
 
     with pytest.raises(DomainError):
         a.transfer_to(b, Money(Decimal("10.00")))
+
+
+def test_two_accounts_have_different_ids():
+    a = Account("Pedro")
+    b = Account("Pedro")
+
+    assert a != b
+
+
+def test_account_created_with_id_mantain_id():
+    id = uuid4()
+    a = Account("Pedro", id)
+
+    assert a.id == id
+
+
+def test_account_id_cannot_be_changed():
+    a = Account("Pedro")
+    id = uuid4()
+
+    with pytest.raises(AttributeError):
+        a.id = id
