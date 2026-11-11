@@ -2,6 +2,7 @@ from decimal import Decimal
 
 import pytest
 
+from bank_system.exceptions import InvalidMoneyError
 from bank_system.money import Money
 
 
@@ -24,17 +25,17 @@ def test_create_money_with_three_places_is_accept_when_the_third_place_is_zero()
 
 
 def test_cannot_create_negative_money():
-    with pytest.raises(ValueError, match="Amount cannot be negative"):
+    with pytest.raises(InvalidMoneyError):
         Money(Decimal("-10.00"))
 
 
 def test_create_money_with_three_places_raises_value_error():
-    with pytest.raises(ValueError, match="Amount must have at most two decimal places"):
+    with pytest.raises(InvalidMoneyError):
         Money(Decimal("10.001"))
 
 
 def test_create_money_with_float_type_raises_type_error():
-    with pytest.raises(TypeError, match="Amount must be Decimal type"):
+    with pytest.raises(TypeError):
         Money(10.00)
 
 
@@ -74,7 +75,7 @@ def test_subtract_values():
 def test_money_cannot_be_negative():
     money = Money(Decimal("2.00"))
 
-    with pytest.raises(ValueError, match="Amount cannot be negative"):
+    with pytest.raises(InvalidMoneyError):
         money_2 = money - Money(Decimal("3.00"))
 
 

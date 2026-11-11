@@ -1,6 +1,10 @@
 from decimal import Decimal
-from sqlite3 import IntegrityError
 
+from bank_system.exceptions import (
+    InsufficientFundsError,
+    SameAccountTransferError,
+    ZeroAmountError,
+)
 from bank_system.money import Money
 
 
@@ -15,22 +19,20 @@ class Account:
 
     def deposit(self, amount: Money) -> None:
         if amount < Money(Decimal("0.01")):
-            raise ValueError("Deposit amount must be positive")
+            raise ZeroAmountError("Amount must be greater than zero")
         self._balance += amount
 
     def withdraw(self, amount: Money) -> None:
-        if amount <= Money(Decimal("0.00")):
-            raise ValueError("Withdraw amount must be positive")
+        if amount < Money(Decimal("0.01")):
+            raise ZeroAmountError("Amount must be greater than zero")
         if amount > self.balance:
-            raise ValueError("Insufficient funds")
+            raise InsufficientFundsError("Insufficient funds")
 
         self._balance -= amount
 
-    def transfer_to(self, account: Account, amount: Money) -> None:
-        if account is self:
-            raise IntegrityError("Cannot transfer money to yourself")
+    def transfer_to(self, destination: Account, amount: Money) -> None:
+        if destination is self:
+            raise SameAccountTransferError("Cannot transfer to the same account")
 
-        
         self.withdraw(amount)
-        account.deposit(amount)
-        
+        destination.deposit(amount)

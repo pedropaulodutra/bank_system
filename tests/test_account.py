@@ -3,6 +3,12 @@ from decimal import Decimal
 import pytest
 
 from bank_system.account import Account
+from bank_system.exceptions import (
+    DomainError,
+    InsufficientFundsError,
+    SameAccountTransferError,
+    ZeroAmountError,
+)
 from bank_system.money import Money
 
 
@@ -20,18 +26,18 @@ def test_deposit_sums_amount_to_balance():
     assert account.balance == Money(Decimal("200.00"))
 
 
-def test_deposit_zero_raises_value_error():
+def test_deposit_zero_raises_error():
     account = Account("Ana")
 
-    with pytest.raises(ValueError, match="Deposit amount must be positive"):
+    with pytest.raises(ZeroAmountError):
         account.deposit(Money(Decimal("0.00")))
 
 
-def test_withdraw_more_than_balance_raises_value_error():
+def test_withdraw_more_than_balance_raises_error():
     account = Account("Ana")
 
     account.deposit(Money(Decimal("10.00")))
-    with pytest.raises(ValueError, match="Insufficient funds"):
+    with pytest.raises(InsufficientFundsError):
         account.withdraw(Money(Decimal("20.00")))
 
 
@@ -40,7 +46,7 @@ def test_fail_withdraws_does_not_subtract_value_from_account():
 
     account.deposit(Money(Decimal("20.00")))
 
-    with pytest.raises(ValueError, match="Insufficient funds"):
+    with pytest.raises(InsufficientFundsError):
         account.withdraw(Money(Decimal("30.00")))
 
     assert account.balance == Money(Decimal("20.00"))
@@ -58,7 +64,7 @@ def test_withdraw_subtract_from_account():
 def test_cannot_withdraw_zero():
     account = Account("Ana")
 
-    with pytest.raises(ValueError, match="Withdraw amount must be positive"):
+    with pytest.raises(ZeroAmountError):
         account.withdraw(Money(Decimal("0.00")))
 
 
@@ -68,3 +74,45 @@ def test_deposit_one_cent_to_account():
     account.deposit(Money(Decimal("0.01")))
 
     assert account.balance == Money(Decimal("0.01"))
+
+
+def test_transfer_moves_money_between_accounts():
+    a = Account("Pedro")
+    b = Account("Kathleen")
+
+    a.deposit(Money(Decimal("100.00")))
+
+    a.transfer_to(b, Money(Decimal("50.00")))
+
+    assert a.balance == Money(Decimal("50.00"))
+    assert b.balance == Money(Decimal("50.00"))
+
+
+def test_transfer_more_than_account_balance_raises_error():
+    a = Account("Pedro")
+    b = Account("Kathleen")
+
+    a.deposit(Money(Decimal("100.00")))
+
+    with pytest.raises(InsufficientFundsError):
+        a.transfer_to(b, Money(Decimal("150.00")))
+
+    assert a.balance == Money(Decimal("100.00"))
+    assert b.balance == Money(Decimal("0.00"))
+
+
+def test_transfer_to_the_same_account_raises_error():
+    a = Account("Pedro")
+
+    a.deposit(Money(Decimal("100.00")))
+
+    with pytest.raises(SameAccountTransferError):
+        a.transfer_to(a, Money(Decimal("50.00")))
+
+
+def test_insufficient_funds_error_is_also_captured_by_domain_error():
+    a = Account("Pedro")
+    b = Account("Kathleen")
+
+    with pytest.raises(DomainError):
+        a.transfer_to(b, Money(Decimal("10.00")))
