@@ -16,3 +16,7 @@ class InsufficientFundsError(DomainError):
 
 class SameAccountTransferError(DomainError):
     pass
+
+
+class AccountNotFoundError(DomainError):
+    pass

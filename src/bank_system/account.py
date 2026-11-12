@@ -40,7 +40,7 @@ class Account:
         self._balance -= amount
 
     def transfer_to(self, destination: Account, amount: Money) -> None:
-        if destination is self:
+        if destination == self:
             raise SameAccountTransferError("Cannot transfer to the same account")
 
         self.withdraw(amount)
@@ -50,3 +50,9 @@ class Account:
         if not isinstance(other, Account):
             return NotImplemented
         return self.id == other.id
+
+    def __hash__(self) -> int:
+        return hash(self.id)
+
+    def __repr__(self) -> str:
+        return f'Account(owner="{self.owner}", balance={self.balance}, id="{self.id}")'

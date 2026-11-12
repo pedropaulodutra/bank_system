@@ -123,7 +123,7 @@ def test_two_accounts_have_different_ids():
     a = Account("Pedro")
     b = Account("Pedro")
 
-    assert a != b
+    assert a.id != b.id
 
 
 def test_account_created_with_id_mantain_id():
@@ -139,3 +139,28 @@ def test_account_id_cannot_be_changed():
 
     with pytest.raises(AttributeError):
         a.id = id
+
+
+def test_account_is_the_same_when_id_is_provided():
+    a = Account("Pedro")
+    b = Account("Pedro", a.id)
+
+    assert a == b
+
+
+def test_set_eliminate_the_same_account():
+    a = Account("Pedro")
+    b = Account("Pedro", a.id)
+
+    accounts = {a, b}
+
+    assert len(accounts) == 1
+
+
+def test_transfer_to_another_object_with_same_id():
+    a = Account("Pedro")
+
+    a.deposit(Money(Decimal("20.00")))
+
+    with pytest.raises(SameAccountTransferError):
+        a.transfer_to(Account("Pedro", a.id), Money(Decimal("10.00")))
