@@ -1,3 +1,4 @@
+from copy import deepcopy
 from uuid import UUID
 
 from bank_system.account import Account
@@ -13,10 +14,10 @@ class InMemoryAccountRepository:
         return self._accounts
 
     def save(self, account: Account) -> None:
-        self._accounts[account.id] = account
+        self._accounts[account.id] = deepcopy(account)
 
     def get(self, account_id: UUID) -> Account:
         try:
-            return self._accounts[account_id]
+            return deepcopy(self._accounts[account_id])
         except KeyError:
             raise AccountNotFoundError("Account does not exist")

@@ -11,47 +11,47 @@ from bank_system.transfer_money import TransferMoney
 
 
 def test_transfer_money_subtract_from_one_and_add_in_another_one():
-    bd = InMemoryAccountRepository()
+    repo = InMemoryAccountRepository()
 
     account = Account("Pedro")
     second_account = Account("Kathleen")
 
     account.deposit(Money(Decimal("10.00")))
 
-    bd.save(account)
-    bd.save(second_account)
+    repo.save(account)
+    repo.save(second_account)
 
-    use_case = TransferMoney(bd)
+    transfer = TransferMoney(repo)
 
-    use_case.execute(account.id, second_account.id, Decimal("7.00"))
+    transfer.execute(account.id, second_account.id, Decimal("7.00"))
 
-    assert account.balance == Money(Decimal("3.00"))
-    assert second_account.balance == Money(Decimal("7.00"))
+    assert repo.get(account.id).balance == Money(Decimal("3.00"))
+    assert repo.get(second_account.id).balance == Money(Decimal("7.00"))
 
 
 def test_non_exists_accounts_raise_error():
-    bd = InMemoryAccountRepository()
-    use_case = TransferMoney(bd)
+    repo = InMemoryAccountRepository()
+    transfer = TransferMoney(repo)
 
     with pytest.raises(AccountNotFoundError):
-        use_case.execute(uuid4(), uuid4(), Decimal("7.00"))
+        transfer.execute(uuid4(), uuid4(), Decimal("7.00"))
 
 
-def transfer_more_than_balance_raises_error():
-    bd = InMemoryAccountRepository()
+def test_transfer_more_than_balance_raises_error():
+    repo = InMemoryAccountRepository()
 
     account = Account("Pedro")
     second_account = Account("Kathleen")
 
     account.deposit(Money(Decimal("10.00")))
 
-    bd.save(account)
-    bd.save(second_account)
+    repo.save(account)
+    repo.save(second_account)
 
-    use_case = TransferMoney(bd)
+    transfer = TransferMoney(repo)
 
     with pytest.raises(InsufficientFundsError):
-        use_case.execute(account.id, second_account.id, Decimal("12.00"))
+        transfer.execute(account.id, second_account.id, Decimal("12.00"))
 
-    assert account.balance == Money(Decimal("10.00"))
-    assert second_account.balance == Money(Decimal("0.00"))
+    assert repo.get(account.id).balance == Money(Decimal("10.00"))
+    assert repo.get(second_account.id).balance == Money(Decimal("0.00"))

@@ -14,3 +14,6 @@ class TransferMoney:
         destination_account = self._accounts.get(destination_id)
 
         source_account.transfer_to(destination_account, Money(amount))
+
+        self._accounts.save(source_account)
+        self._accounts.save(destination_account)
