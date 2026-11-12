@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from decimal import Decimal
 
-from bank_system.exceptions import InvalidMoneyError
+from bank_system.domain.exceptions import InvalidMoneyError
 
 
 @dataclass(frozen=True, order=True)

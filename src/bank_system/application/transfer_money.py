@@ -1,12 +1,12 @@
 from decimal import Decimal
 from uuid import UUID
 
-from bank_system.money import Money
-from bank_system.repository import InMemoryAccountRepository
+from bank_system.application.account_repository import AccountRepository
+from bank_system.domain.money import Money
 
 
 class TransferMoney:
-    def __init__(self, accounts: InMemoryAccountRepository) -> None:
+    def __init__(self, accounts: AccountRepository) -> None:
         self._accounts = accounts
 
     def execute(self, source_id: UUID, destination_id: UUID, amount: Decimal) -> None:

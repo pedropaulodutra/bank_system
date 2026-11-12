@@ -2,9 +2,9 @@ from uuid import uuid4
 
 import pytest
 
-from bank_system.account import Account
-from bank_system.exceptions import AccountNotFoundError
-from bank_system.repository import InMemoryAccountRepository
+from bank_system.domain.account import Account
+from bank_system.domain.exceptions import AccountNotFoundError
+from bank_system.infrastructure.repository import InMemoryAccountRepository
 
 
 def test_getting_a_count_in_memory():

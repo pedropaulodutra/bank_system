@@ -3,14 +3,14 @@ from uuid import uuid4
 
 import pytest
 
-from bank_system.account import Account
-from bank_system.exceptions import (
+from bank_system.domain.account import Account
+from bank_system.domain.exceptions import (
     DomainError,
     InsufficientFundsError,
     SameAccountTransferError,
     ZeroAmountError,
 )
-from bank_system.money import Money
+from bank_system.domain.money import Money
 
 
 def test_new_account_starts_with_zero_balance():

@@ -1,9 +1,9 @@
 from decimal import Decimal
 
-from bank_system.account import Account
-from bank_system.money import Money
-from bank_system.repository import InMemoryAccountRepository
-from bank_system.transfer_money import TransferMoney
+from bank_system.application.transfer_money import TransferMoney
+from bank_system.domain.account import Account
+from bank_system.domain.money import Money
+from bank_system.infrastructure.repository import InMemoryAccountRepository
 
 bd = InMemoryAccountRepository()
 

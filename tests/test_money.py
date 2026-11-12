@@ -2,8 +2,8 @@ from decimal import Decimal
 
 import pytest
 
-from bank_system.exceptions import InvalidMoneyError
-from bank_system.money import Money
+from bank_system.domain.exceptions import InvalidMoneyError
+from bank_system.domain.money import Money
 
 
 def test_create_money():

@@ -1,8 +1,8 @@
 from copy import deepcopy
 from uuid import UUID
 
-from bank_system.account import Account
-from bank_system.exceptions import AccountNotFoundError
+from bank_system.domain.account import Account
+from bank_system.domain.exceptions import AccountNotFoundError
 
 
 class InMemoryAccountRepository:

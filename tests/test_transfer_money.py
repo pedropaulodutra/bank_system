@@ -3,11 +3,11 @@ from uuid import uuid4
 
 import pytest
 
-from bank_system.account import Account
-from bank_system.exceptions import AccountNotFoundError, InsufficientFundsError
-from bank_system.money import Money
-from bank_system.repository import InMemoryAccountRepository
-from bank_system.transfer_money import TransferMoney
+from bank_system.application.transfer_money import TransferMoney
+from bank_system.domain.account import Account
+from bank_system.domain.exceptions import AccountNotFoundError, InsufficientFundsError
+from bank_system.domain.money import Money
+from bank_system.infrastructure.repository import InMemoryAccountRepository
 
 
 def test_transfer_money_subtract_from_one_and_add_in_another_one():

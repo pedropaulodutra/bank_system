@@ -1,12 +1,12 @@
 from decimal import Decimal
 from uuid import UUID, uuid4
 
-from bank_system.exceptions import (
+from bank_system.domain.exceptions import (
     InsufficientFundsError,
     SameAccountTransferError,
     ZeroAmountError,
 )
-from bank_system.money import Money
+from bank_system.domain.money import Money
 
 
 class Account:
